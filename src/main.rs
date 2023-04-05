@@ -22,7 +22,7 @@ fn model(_app: &App) -> Model {
         Person::new(50.0, [-150.0, 100.0], [-10.0, -7.5]),
         Person::new(20.0, [-300.0, 100.0], [-10.0, -7.5]),
         Person::new(40.0, [-150.0, 300.0], [10.0, -7.5]),
-        Person::new(100.0, [150.0, 150.0], [3.0, -7.5]),
+        Person::new(30.0, [150.0, 150.0], [3.0, -7.5]),
     ];
     let affairs: Vec<usize> = vec![];
     Model { crowd, affairs }
@@ -112,7 +112,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     // Prepare to draw.
     let draw = app.draw();
 
-    draw.background().color(PLUM);
+    draw.background().color(REBECCAPURPLE);
 
     let _model = &model.crowd;
 
@@ -120,8 +120,8 @@ fn view(app: &App, model: &Model, frame: Frame) {
         draw_person(
             &draw,
             Alpha {
-                color: STEELBLUE,
-                alpha: 0.5,
+                color: ORANGERED,
+                alpha: 1.0,
             },
             i,
         );

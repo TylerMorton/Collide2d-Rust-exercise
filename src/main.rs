@@ -1,4 +1,4 @@
-use nannou::color::{IntoLinSrgba, Alpha};
+use nannou::color::{Alpha, IntoLinSrgba};
 use nannou::draw::properties::ColorScalar;
 use nannou::event::ElementState;
 use nannou::prelude::*;
@@ -33,15 +33,21 @@ use nannou::winit::event::DeviceEvent::Button;
 fn event(_app: &App, _model: &mut Model, _event: Event) {
     match _event {
         Event::WindowEvent { .. } => (),
-        Event::DeviceEvent(_, Button {button: 0, state: ElementState::Pressed}) => {
-                let p = Person::new(20.0, [_app.mouse.x, _app.mouse.y], [5.0, -2.3]);
-                for i in _model.crowd.iter() {
-                    if p.peer_collision(&i) {
-                        return;
-                    }
-                }
-                _model.crowd.push(p)
+        Event::DeviceEvent(
+            _,
+            Button {
+                button: 0,
+                state: ElementState::Pressed,
             },
+        ) => {
+            let p = Person::new(20.0, [_app.mouse.x, _app.mouse.y], [5.0, -2.3]);
+            for i in _model.crowd.iter() {
+                if p.peer_collision(&i) {
+                    return;
+                }
+            }
+            _model.crowd.push(p)
+        }
         Event::DeviceEvent { .. } => (),
         _ => {
             let r = core::naive_have_collided(&_model.crowd);
@@ -59,7 +65,10 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
                 if !prev_collided.contains(&idx) && r.contains(&idx) {
                     crowd.push(val);
                 } else {
-                    if colliding_pairs.iter().any(|e| e[0] == val.id() || e[1] == val.id()) {
+                    if colliding_pairs
+                        .iter()
+                        .any(|e| e[0] == val.id() || e[1] == val.id())
+                    {
                         crowd.push(val);
                     }
                 }
@@ -108,7 +117,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let _model = &model.crowd;
 
     for i in _model {
-        draw_person(&draw, Alpha {color: STEELBLUE, alpha: 0.5} , i);
+        draw_person(
+            &draw,
+            Alpha {
+                color: STEELBLUE,
+                alpha: 0.5,
+            },
+            i,
+        );
     }
 
     draw.to_frame(app, &frame).unwrap();

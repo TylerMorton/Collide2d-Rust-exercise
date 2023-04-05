@@ -2,9 +2,9 @@ pub mod collision_physics;
 pub mod person;
 
 pub mod core {
+    use crate::collision_physics;
     pub use crate::person::Person;
     use std::collections::HashMap;
-    use crate::collision_physics;
 
     // returns indexes of reference people from vector
     pub fn naive_have_collided(crowd: &Vec<Person>) -> Vec<usize> {
@@ -22,7 +22,7 @@ pub mod core {
         collisions.into_values().collect()
     }
 
-    pub fn collide(crowd: &mut Vec<&mut Person>) -> Vec<[u32;2]> {
+    pub fn collide(crowd: &mut Vec<&mut Person>) -> Vec<[u32; 2]> {
         let mut collisions: HashMap<Vec<usize>, usize> = HashMap::new();
         for (idx1, i) in crowd.iter().enumerate() {
             for (idx2, j) in crowd.iter().enumerate() {
@@ -45,15 +45,15 @@ pub mod core {
             let x1 = p1.position();
             let x2 = p2.position();
 
-            let a = collision_physics::colission_update2(
-                v1, p1.mass(), x1,
-                v2, p2.mass(), x2
-            );
+            let a = collision_physics::colission_update2(v1, p1.mass(), x1, v2, p2.mass(), x2);
 
             crowd[val[0]].change_velocity(a[0]);
             crowd[val[1]].change_velocity(a[1]);
         }
-        values.iter().map(|x| [crowd[x[0]].id(), crowd[x[1]].id()]).collect()
+        values
+            .iter()
+            .map(|x| [crowd[x[0]].id(), crowd[x[1]].id()])
+            .collect()
     }
 
     pub fn are_colliding(crowd: &mut Vec<&mut Person>) -> Vec<usize> {
@@ -92,8 +92,8 @@ pub mod core {
 #[cfg(test)]
 mod tests {
 
-    use crate::person::Person;
     use crate::collision_physics::distance2;
+    use crate::person::Person;
 
     #[test]
     fn build_person() {

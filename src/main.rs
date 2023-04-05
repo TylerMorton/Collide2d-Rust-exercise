@@ -94,8 +94,8 @@ where
 {
     draw.ellipse()
         .color(color)
-        .w(p.diameter())
-        .h(p.diameter())
+        .w(2.0 * p.radius())
+        .h(2.0 * p.radius())
         .x_y(p.x(), p.y());
 }
 

@@ -70,6 +70,7 @@ pub mod core {
         }
         collisions.into_keys().collect()
     }
+
     pub fn are_colliding_pairs(crowd: &mut Vec<&mut Person>) -> Vec<Vec<u32>> {
         let mut collisions: HashMap<usize, Vec<u32>> = HashMap::new();
         for (idx1, i) in crowd.iter().enumerate() {
@@ -98,7 +99,7 @@ mod tests {
     fn build_person() {
         let p = Person::new(4.0, [0.0, 0.0], [0.0, 0.0]);
         assert_eq!(p.radius(), 4.0);
-        assert_eq!(p.diameter(), 8.0);
+        assert_eq!(2.0 * p.radius(), 8.0);
         assert_eq!(p.position(), [0.0, 0.0]);
     }
 
@@ -119,36 +120,7 @@ mod tests {
     #[test]
     fn no_peer_collision() {
         let p = Person::new(4.0, [4.0, 7.0], [0.0, 0.0]);
-        let q = Person::new(4.0, [10.0, 11.0], [0.0, 0.0]);
+        let q = Person::new(4.0, [11.0, 11.0], [0.0, 0.0]);
         assert_eq!(p.peer_collision(&q), false);
     }
-
-
-    // #[test]
-
-    // fn single_collision() {
-    //   let p = Person::new(10.0, [1.0, 4.0, 2.0], [1.0, 0.0, 0.0]);
-    //   let q = Person::new(7.0, [10.0, 7.0, 15.0], [1.0, 0.0, 0.0]);
-    //   let r = Person::new(2.0, [20.0, 11.0, 13.0], [1.0, 0.0, 0.0] );
-    //   let crowd = vec![&p, &q, &r];
-    //   assert_eq!(naive_have_collided(&crowd).sort(), vec![&p, &q].sort())
-    // }
-
-    // #[test]
-    // fn multiple_collisions() {
-    //   let p = Person::new(10.0, [1.0, 4.0, 2.0]);
-    //   let q = Person::new(7.0, [10.0, 7.0, 15.0]);
-    //   let r = Person::new(4.0, [20.0, 11.0, 13.0]);
-    //   let crowd = vec![&p, &q, &r];
-    //   assert_eq!(naive_have_collided(crowd).sort(), vec![&p, &q].sort())
-    // }
-
-    // #[test]
-    // fn no_collisions() {
-    //   let p = Person::new(9.0, [1.0, 4.0, 2.0]);
-    //   let q = Person::new(7.0, [10.0, 7.0, 15.0]);
-    //   let r = Person::new(2.0, [20.0, 11.0, 13.0]);
-    //   let crowd = vec![&p, &q, &r];
-    //   assert_eq!(naive_have_collided(crowd), vec![] as Vec<&Person>)
-    // }
 }

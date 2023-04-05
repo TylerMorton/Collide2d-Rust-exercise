@@ -32,10 +32,6 @@ impl Person {
       self.radius
   }
 
-  pub fn diameter(&self) -> f32 {
-      self.radius * 2.0
-  }
-
   pub fn position(&self) -> [f32; 2] {
     self.position
   }
@@ -80,6 +76,7 @@ impl Person {
     let dist = collision_physics::distance2(self.position, other.position);
     if dist < self.radius + other.radius {true} else {false}
   }
+
 }
 
 impl Eq for Person {}

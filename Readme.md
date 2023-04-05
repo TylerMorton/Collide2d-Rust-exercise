@@ -19,4 +19,6 @@ I decided to try out what all the hype was about and spent a few days learning R
 
 ## How to test
 Repeat steps 1 & 2 above. Then run the code as such:
-```$: cargo test```
+```
+  $: cargo test
+```

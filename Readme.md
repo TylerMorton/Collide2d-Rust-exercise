@@ -1,4 +1,4 @@
-[![Build workflow](https://github.com/TylerMorton/Collide2d-Rust-exercise/actions/workflows/build.yml/badge.svg)]
+![Build workflow](https://github.com/TylerMorton/Collide2d-Rust-exercise/actions/workflows/build.yml/badge.svg)
 # Collision2d Rust Exercise
 
 I decided to try out what all the hype was about and spent a few days learning Rust over spring break. I then decided to do a project that would bring me out of my comfort zone by working on a graphical simulation with no graphics or simulation programming background, while also reinforcing some the basic concepts of rust.

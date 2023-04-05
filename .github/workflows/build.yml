@@ -18,10 +18,9 @@ jobs:
         run: cargo fmt --all -- --check
 
   cargo:
-    name: Build
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout sources
+      - name: Checkout sources
           uses: actions/checkout@v2
 
       - name: Build Rust code

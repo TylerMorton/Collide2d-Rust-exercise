@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-          uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: Build Rust code
         run: cargo build

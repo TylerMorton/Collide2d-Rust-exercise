@@ -3,6 +3,8 @@ use nannou::draw::properties::ColorScalar;
 use nannou::event::ElementState;
 use nannou::prelude::*;
 
+use std::collections::HashMap;
+
 use collision2d::core;
 use collision2d::core::{are_colliding, Person};
 
@@ -12,19 +14,19 @@ fn main() {
 
 struct Model {
     crowd: Vec<Person>,
-    affairs: Vec<usize>,
+    affairs: Vec<(u32, u32)>,
 }
 
 fn model(_app: &App) -> Model {
     let crowd = vec![
-        Person::new(50.0, [200.0, 0.0], [5.0, 2.0]),
-        Person::new(50.0, [-100.0, 0.0], [-5.0, -1.0]),
-        Person::new(50.0, [-150.0, 100.0], [-10.0, -7.5]),
-        Person::new(20.0, [-300.0, 100.0], [-10.0, -7.5]),
-        Person::new(40.0, [-150.0, 300.0], [10.0, -7.5]),
-        Person::new(30.0, [150.0, 150.0], [3.0, -7.5]),
+        Person::new(50.0, [200.0, 0.0], [1.0, 0.5]),
+        Person::new(50.0, [150.0, 0.0], [-1.0, -1.0]),
+        // Person::new(50.0, [-150.0, 100.0], [-1.0, -1.0]),
+        // Person::new(20.0, [-300.0, 100.0], [-1.0, -1.0]),
+        // Person::new(40.0, [-150.0, 300.0], [1.0, -1.5]),
+        // Person::new(30.0, [150.0, 150.0], [1.0, -1.5]),
     ];
-    let affairs: Vec<usize> = vec![];
+    let affairs: Vec<(u32, u32)> = vec![];
     Model { crowd, affairs }
 }
 
@@ -40,7 +42,7 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
                 state: ElementState::Pressed,
             },
         ) => {
-            let p = Person::new(20.0, [_app.mouse.x, _app.mouse.y], [5.0, -2.3]);
+            let p = Person::new(20.0, [_app.mouse.x, _app.mouse.y], [1.0, -1.3]);
             for i in _model.crowd.iter() {
                 if p.peer_collision(&i) {
                     return;
@@ -50,30 +52,36 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
         }
         Event::DeviceEvent { .. } => (),
         _ => {
-            let r = core::naive_have_collided(&_model.crowd);
-            let mut prev_crowd = Vec::new();
-            for (idx, val) in _model.crowd.iter_mut().enumerate() {
-                if _model.affairs.contains(&idx) {
-                    prev_crowd.push(val);
-                }
-            }
-            let prev_collided = are_colliding(&mut prev_crowd);
-            let boundary = _app.window_rect();
-            let colliding_pairs = core::are_colliding_pairs(&mut prev_crowd);
-            let mut crowd: Vec<&mut Person> = Vec::new();
-            for (idx, val) in _model.crowd.iter_mut().enumerate() {
-                if !prev_collided.contains(&idx) && r.contains(&idx) {
-                    crowd.push(val);
-                } else {
-                    if colliding_pairs
-                        .iter()
-                        .any(|e| e[0] == val.id() || e[1] == val.id())
-                    {
-                        crowd.push(val);
+
+            let mut new_affairs:  Vec<(u32, u32)> = Vec::new();
+            let mut collisions: HashMap<u32, usize> = HashMap::new();
+            for (idx, i) in _model.crowd.iter().enumerate() {
+                for j in _model.crowd.iter() {
+                    if &j == &i {
+                        continue;
+                    }
+                    if i.peer_collision(&j) {
+                        if !_model.affairs.contains(&(std::cmp::min(i.id(), j.id()), std::cmp::max(i.id(), j.id()))) { 
+                            collisions.entry(i.id()).or_insert(idx);
+                        }
+                        new_affairs.push((std::cmp::min(i.id(), j.id()), std::cmp::max(i.id(), j.id())))
                     }
                 }
             }
+            let r: Vec<usize> = collisions.into_values().collect();
+            let boundary = _app.window_rect();
+            let mut crowd: Vec<&mut Person> = Vec::new();
+
+            for (idx, val) in _model.crowd.iter_mut().enumerate() {
+                if r.contains(&idx) {
+                    crowd.push(val);
+                }
+            }
+
+            // updates velocities after collision
             core::collide(&mut crowd);
+
+            // Boundary bounce
             for x in _model.crowd.iter_mut() {
                 if x.position()[0] - x.radius() < boundary.left()
                     || x.position()[0] + x.radius() > boundary.right()
@@ -92,7 +100,7 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
                 }
                 x.change_position(new_position);
             }
-            _model.affairs = r;
+            _model.affairs = new_affairs;
         }
     }
 }

@@ -79,6 +79,15 @@ impl Person {
             false
         }
     }
+
+    pub fn collision(&self, other: [f32; 2]) -> bool {
+        let dist = collision_physics::distance2(self.position, other);
+        if dist < self.radius {
+            true
+        } else {
+            false
+        }
+    }
 }
 
 impl Eq for Person {}
@@ -95,6 +104,19 @@ impl PartialEq for Person {
             true
         } else {
             false
+        }
+    }
+}
+
+impl Clone for Person {
+    fn clone(&self) -> Self {
+        Person {
+            id: self.id,
+            position: self.position,
+            radius: self.radius,
+            velocity: self.velocity,
+            mass: self.mass,
+            acceleration: self.acceleration,
         }
     }
 }
